@@ -1,0 +1,9 @@
+impacket
+pysmb
+pycrypto
+paramiko
+scapy
+whois
+requests==2.20.0
+terminaltables==3.1.0
+configparser==3.5.0

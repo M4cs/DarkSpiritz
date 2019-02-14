@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+Description = 'Cloudflare Resolver.'
+from pluginsupport import *
+import socket
+
+target = ask('rhost')
+subdomains = ["ftp", "cpanel", "webmail", "forum", "driect-connect", "vb", "forums", "home", "direct", "mail", "access", "admin", "administrator", "email", "downloads", "ssh", "webmin", "paralel", "parallels", "www0", "www", "www1", "www2", "www3", "www4", "www5"]
+
+text("Scanning...")
+try:
+    for sbdm in subdomains:
+        try:
+            hosts = str(sbdm) + "." + str(target)
+            trueip = socket.gethostbyname(str(hosts))
+            success(hosts + " : " +str(trueip))
+        except:
+            pass
+except KeyboardInterrupt:
+    exit()

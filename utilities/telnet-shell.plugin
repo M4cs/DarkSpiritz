@@ -1,0 +1,15 @@
+#!/uar/bin/env python3
+Description = 'Open a telnet shell'
+
+from pluginsupport import *
+
+target = ask('RHOST')
+rport = ask('RPORT')
+
+def run():
+    import os, sys
+    command = 'telnet ' + target + " " + port
+    text("Starting Telnet Connection With: " + target + ":" + port)
+    os.system(command)
+
+run()

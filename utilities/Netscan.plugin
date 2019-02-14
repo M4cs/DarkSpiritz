@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+Description = 'Netscan automatically discover devices within the network.'
+
+from pluginsupport import *
+import ping
+
+rd = "192.168"
+
+try:
+    ranger = input("[\033[1;94m?\033[0m] Enter range [" + rd + "]:") or rd
+    for subnetId in range(1,255):
+        for hostId in range(1,255):
+            ip="192.168."+str(subnetId) + "." +str(hostId)
+            response = ping.verbose_ping(ip)
+except KeyboardInterrupt:
+    exit()
