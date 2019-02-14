@@ -21,9 +21,6 @@ If you need any help feel free to contact us at syndicatedintel@protonmail.com.
 Syntel Team:
 
 [M4cs](https://github.com/M4cs) | [@maxbridgland](https://twitter.com/maxbridgland)
-
-[Ryan](https://github.com/Ryan0x1) | [@ryan0x1](https://twitter.com/ryan0x1)
-
 # Version 2.0 UPDATE (READ IMPORTANT)
 
 We have completely rewritten the framework and configuration method based off community feedback. We have also finally updated to Python 3. It took a long time but was most definitely worth it! This version should run a lot smoother and have a cleaner UI. 
