@@ -1,10 +1,10 @@
 ![alt text](https://travis-ci.com/DarkSpiritz/DarkSpiritz.svg?branch=master)
 
-[![GitHub issues](https://img.shields.io/github/issues/DarkSpiritz/DarkSpiritz.svg)](https://github.com/DarkSpiritz/DarkSpiritz/issues)
-[![GitHub stars](https://img.shields.io/github/stars/DarkSpiritz/DarkSpiritz.svg)](https://github.com/DarkSpiritz/DarkSpiritz/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/DarkSpiritz/DarkSpiritz.svg)](https://github.com/DarkSpiritz/DarkSpiritz/network)
-[![GitHub license](https://img.shields.io/github/license/DarkSpiritz/DarkSpiritz.svg)](https://github.com/DarkSpiritz/DarkSpiritz/blob/master/LICENSE)
-[![Twitter](https://img.shields.io/twitter/url/https/github.com/DarkSpiritz/DarkSpiritz.svg?style=popout)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FDarkSpiritz%2FDarkSpiritz)
+[![GitHub issues](https://img.shields.io/github/issues/M4cs/DarkSpiritz.svg)](https://github.com/M4cs/DarkSpiritz/issues)
+[![GitHub stars](https://img.shields.io/github/stars/M4cs/DarkSpiritz.svg)](https://github.com/M4cs/DarkSpiritz/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/M4cs/DarkSpiritz.svg)](https://github.com/M4cs/DarkSpiritz/network)
+[![GitHub license](https://img.shields.io/github/license/M4cs/DarkSpiritz.svg)](https://github.com/M4cs/DarkSpiritz/blob/master/LICENSE)
+[![Twitter](https://img.shields.io/twitter/url/https/github.com/M4cs/DarkSpiritz.svg?style=popout)](https://twitter.com/intent/tweet?text=Wow:&url=https%3A%2F%2Fgithub.com%2FM4cs%2FDarkSpiritz)
 
 ![alt text](https://img.shields.io/badge/Gitter-%20Join!-blue.svg)
 
