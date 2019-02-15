@@ -81,11 +81,8 @@ try:
         config = configparser.ConfigParser()
         config.read("config/userdat.ini")
         terminalname = colors.BLUE + "[" + colors.END + "DSPF" + colors.BLUE + "]> " + colors.END
-        terminal = input(terminalname + colors.END).lower()
-        if terminal[0:4] == "help":
-            helper.menu()
-            main()
-        elif terminal[0:1] == "?":
+        terminal = input(terminalname + colors.END)
+        if terminal[0:4] == "help" or terminal == "?":
             helper.menu()
             main()
         elif terminal[0:5] == "clear":
