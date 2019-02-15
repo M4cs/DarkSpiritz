@@ -72,6 +72,8 @@ Some plugins may only work on certain platforms. If you would like to check
 before running a plugin use the info command below. The developer of the
 plugin will provide more info on what systems the plugin runs successfully
 on.
+
+Commands are CaSe SeNsItIvE
     """ + colors.END
     print(header)
     print(colors.BLUE + table.table + colors.END)
