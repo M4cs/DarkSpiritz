@@ -17,7 +17,7 @@ A penetration testing framework for Linux and Windows systems.
 
 # What is DarkSpiritz?
 
-Created by the SynTel Team it was a project of one of the owners to update and clean-up an older pentesting framework he had created to something updated and modern. DarkSpiritz is a re-vamp of the very popular framework known as "Roxysploit". You may be familiar with this framework and if you are then it will help you with DarkSpiritz. DarkSpiritz also works like another pentesting framework known as Metasploit. If you know how to use metasploit setting up and working with DarkSpiritz will be a breeze. Inside the program itself you will find a lot of help and documentation on plugins or you can head to our wiki [here](https://github.com/DarkSpiritz/DarkSpiritz/wiki).
+Created by the SynTel Team it was a project of one of the owners to update and clean-up an older pentesting framework he had created to something updated and modern. DarkSpiritz is a re-vamp of the very popular framework known as "Roxysploit". You may be familiar with this framework and if you are then it will help you with DarkSpiritz. DarkSpiritz also works like another pentesting framework known as Metasploit. If you know how to use metasploit setting up and working with DarkSpiritz will be a breeze. Inside the program itself you will find a lot of help and documentation on plugins or you can head to our wiki [here](https://github.com/M4cs/DarkSpiritz/wiki).
 If you need any help feel free to contact us at syndicatedintel@protonmail.com.
 
 Syntel Team:
@@ -33,10 +33,10 @@ Enjoy!
 
 Clone the repository with git:
 ```
-git clone https://github.com/DarkSpiritz/DarkSpiritz.git
+git clone https://github.com/M4cs/DarkSpiritz.git
 ```
 
-*DarkSpiritz wiki available [here](https://github.com/DarkSpiritz/DarkSpiritz/wiki)*
+*DarkSpiritz wiki available [here](https://github.com/M4cs/DarkSpiritz/wiki)*
 
 To install DarkSpiritz clone the github repo and run:
 ```
