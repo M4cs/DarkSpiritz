@@ -33,10 +33,10 @@ Enjoy!
 
 Clone the repository with git:
 ```
-git clone https://github.com/DarkSpiritz/DarkSpiritz.git
+git clone https://github.com/M4cs/DarkSpiritz.git
 ```
 
-*DarkSpiritz wiki available [here](https://github.com/DarkSpiritz/DarkSpiritz/wiki)*
+*DarkSpiritz wiki available [here](https://github.com/M4cs/DarkSpiritz/wiki)*
 
 To install DarkSpiritz clone the github repo and run:
 ```
